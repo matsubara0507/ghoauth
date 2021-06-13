@@ -1,0 +1,15 @@
+resolver: lts-17.15
+packages:
+- '.'
+extra-deps:
+- membership-0
+- extensible-0.8.2
+- incremental-0.3.1
+- github: matsubara0507/mix.hs
+  commit: 75714be080db16f6a4f9d0a22e86947ffcdadc57
+  subdirs:
+  - mix
+
+docker:
+  repo: ghcr.io/matsubara0507/stack-build:18.04
+  enable: false

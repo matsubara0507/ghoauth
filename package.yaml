@@ -1,0 +1,67 @@
+name:                ghoauth
+version:             0.1.0
+homepage:            https://github.com/matsubara0507/ghoauth#readme
+license:             MIT
+author:              MATSUBARA Nobutada
+copyright:           2021 MATSUBARA Nobutada
+category:            Web
+description:         Please see the README on GitHub at <https://github.com/matsubara0507/ghoauth#readme>
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wredundant-constraints
+
+default-extensions:
+- NoImplicitPrelude
+
+- ConstraintKinds
+- DataKinds
+- FlexibleContexts
+- FlexibleInstances
+- GeneralizedNewtypeDeriving
+- LambdaCase
+- MultiWayIf
+- NumericUnderscores
+- OverloadedLabels
+- OverloadedStrings
+- PolyKinds
+- RankNTypes
+- StandaloneDeriving
+- TypeFamilies
+- TypeOperators
+- TypeSynonymInstances
+
+dependencies:
+- base >= 4.7 && < 5
+- rio >= 0.1.1.0
+- extensible >= 0.6
+- mix
+
+library:
+  source-dirs: src
+
+executables:
+  ghoauth:
+    main: Main.hs
+    source-dirs: app
+    dependencies:
+    - ghoauth
+    - githash
+    - dotenv
+
+tests:
+  ghoauth-test:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+    - ghoauth
+    - tasty
+    - tasty-hspec
+    other-modules: []
