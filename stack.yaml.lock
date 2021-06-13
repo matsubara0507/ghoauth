@@ -38,6 +38,19 @@ packages:
   original:
     subdir: mix
     url: https://github.com/matsubara0507/mix.hs/archive/75714be080db16f6a4f9d0a22e86947ffcdadc57.tar.gz
+- completed:
+    size: 8114
+    subdir: simple-api
+    url: https://github.com/matsubara0507/extensible-ext/archive/a9c5e50696f8205d17628625f5b724ef92557aeb.tar.gz
+    name: simple-api
+    version: 0.1.0
+    sha256: 94d90fc6742a4c94acdda08500269526ee438265f6b8e9aac2ed6249af013130
+    pantry-tree:
+      size: 510
+      sha256: e15a0ce8615f585a7880552ca5416dde18680f68be0aa89d46d9b73e3f9c1bec
+  original:
+    subdir: simple-api
+    url: https://github.com/matsubara0507/extensible-ext/archive/a9c5e50696f8205d17628625f5b724ef92557aeb.tar.gz
 snapshots:
 - completed:
     size: 567679

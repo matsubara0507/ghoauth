@@ -1,4 +1,5 @@
-{-# LANGUAGE TemplateHaskell  #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Version
   ( build
