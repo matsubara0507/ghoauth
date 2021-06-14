@@ -57,6 +57,7 @@ executables:
     source-dirs: app
     dependencies:
     - dotenv
+    - fallible
     - ghoauth
     - githash
     - mix

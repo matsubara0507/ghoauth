@@ -5,13 +5,6 @@
 
 packages:
 - completed:
-    hackage: membership-0@sha256:3a11d8fd53cb1a76bb9273e6c929bbf9d649f109714bf487abb3143be04ddc81,995
-    pantry-tree:
-      size: 408
-      sha256: 3b593e0d14e848e318e745555776ebb25210e5e3dec4fde5d3c08ab51ceddc62
-  original:
-    hackage: membership-0
-- completed:
     hackage: extensible-0.8.2@sha256:f3e7497709199034222e10ba45d3730e21155fb89159ccf1fb0b55f1d7d02697,2963
     pantry-tree:
       size: 2041
@@ -19,12 +12,26 @@ packages:
   original:
     hackage: extensible-0.8.2
 - completed:
+    hackage: fallible-0.1.0@sha256:0e0032c34120a43bf1d446172162b546e36441c38f620afb24e9d447ed7ce6b6,1312
+    pantry-tree:
+      size: 369
+      sha256: 7de6ccd3ae9fa01eafdb02afdd5a50f1f6babf48aeb31afa21d0329f0fdd19d1
+  original:
+    hackage: fallible-0.1.0
+- completed:
     hackage: incremental-0.3.1@sha256:9c697bae4f7e5ceb144bde13e03ca2f36b4bc2d0c92bbc02e0a604231ee279c2,1153
     pantry-tree:
       size: 370
       sha256: fd5f40352dbf1602babd2c5db2a120c26e57bbd5ad30b19ce24d04189f6a18d1
   original:
     hackage: incremental-0.3.1
+- completed:
+    hackage: membership-0@sha256:3a11d8fd53cb1a76bb9273e6c929bbf9d649f109714bf487abb3143be04ddc81,995
+    pantry-tree:
+      size: 408
+      sha256: 3b593e0d14e848e318e745555776ebb25210e5e3dec4fde5d3c08ab51ceddc62
+  original:
+    hackage: membership-0
 - completed:
     size: 11913
     subdir: mix

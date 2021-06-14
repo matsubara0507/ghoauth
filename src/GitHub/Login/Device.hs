@@ -25,7 +25,7 @@ requestCode
 requestCode c =
   buildApi c POST (baseUrl c /: "device" /: "code") NoReqBody . scopeParam
 
-type AceesTokenInfo = Record
+type AccessTokenInfo = Record
   '[ "access_token"             >: Text
    , "expires_in"               >: Maybe Int  -- only GitHub App
    , "token_type"               >: Text
@@ -38,7 +38,7 @@ requestAccessToken
   :: (MonadHttp m, GitHubLoginClient c)
   => c
   -> Text -- ^ device code
-  -> m (GitHub.LoginResponse AceesTokenInfo)
+  -> m (GitHub.LoginResponse AccessTokenInfo)
 requestAccessToken c code =
   buildApi c POST (baseUrl c /: "oauth" /: "access_token") NoReqBody params
   where

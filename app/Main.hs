@@ -27,6 +27,8 @@ main = withGetOpt' "[options] [input-file]" opts $ \r args usage -> do
         <: #version   @= versionOpt
         <: #verbose   @= verboseOpt
         <: #client_id @= clientIdOpt
+        <: #env_file  @= envFileOpt
+        <: #env_var   @= envVarOpt
         <: nil
 
 type Options = Record
@@ -34,6 +36,8 @@ type Options = Record
    , "version"   >: Bool
    , "verbose"   >: Bool
    , "client_id" >: Maybe Text
+   , "env_file"  >: FilePath
+   , "env_var"   >: String
    ]
 
 helpOpt :: OptDescr' Bool
@@ -46,7 +50,13 @@ verboseOpt :: OptDescr' Bool
 verboseOpt = optFlag ['v'] ["verbose"] "Enable verbose mode: verbosity level \"debug\""
 
 clientIdOpt :: OptDescr' (Maybe Text)
-clientIdOpt = fmap fromString <$> optLastArg [] ["client_id"] "GitHub Apps client ID instead of CLIENT_ID environment variable" "TEXT"
+clientIdOpt = fmap fromString <$> optLastArg [] ["client_id"] "TEXT" "GitHub Apps client ID instead of CLIENT_ID environment variable"
+
+envFileOpt :: OptDescr' FilePath
+envFileOpt = fromMaybe "~/.env" <$> optLastArg [] ["env-file"] "PATH" ".env file path to write access token"
+
+envVarOpt :: OptDescr' String
+envVarOpt = fromMaybe "GITHUB_TOKEN" <$> optLastArg [] ["env-var"] "TEXT" "Environment variable name for access token"
 
 runCmd :: Options -> Maybe FilePath -> IO ()
 runCmd opts _path = do
@@ -57,6 +67,7 @@ runCmd opts _path = do
       let plugin = hsequence
                  $ #logger <@=> MixLogger.buildPlugin logOpts
                 <: #client <@=> pure (GitHub.newClient cid)
+                <: #dotenv <@=> pure (#path @= (opts ^. #env_file) <: #var @= (opts ^. #env_var) <: nil)
                 <: nil
       Mix.run plugin cmd
   where
