@@ -14,6 +14,7 @@ import qualified GitHub.Login.Device  as GitHub
 import           Mix.Plugin.Logger    as MixLogger
 import           Network.HTTP.Req
 import           RIO.Time
+import           Web.Browser          (openBrowser)
 
 cmd :: RIO Env ()
 cmd = do
@@ -34,9 +35,13 @@ fetchAccessTokenInfo = do
       pure (GitHub.Err e)
     GitHub.Ok code -> do
       BS.putStr $ encodeUtf8 ("Copy code: " <> code ^. #user_code <> "\n")
-      BS.putStr $ encodeUtf8 ("then open: " <> code ^. #verification_uri <> "\n")
+      whenM (not <$> openBrowser' code) $
+        BS.putStr $ encodeUtf8 ("then open: " <> code ^. #verification_uri <> "\n")
       now <- getCurrentTime
       pollAccessTokenInfo (addUTCTime (fromIntegral $ code ^. #expires_in) now) code
+
+openBrowser' :: MonadIO m => GitHub.LoginCode -> m Bool
+openBrowser' code = liftIO $ openBrowser (Text.unpack $ code ^. #verification_uri)
 
 pollAccessTokenInfo :: UTCTime -> GitHub.LoginCode -> RIO Env (GitHub.Ok GitHub.AccessTokenInfo)
 pollAccessTokenInfo expireAt code = go

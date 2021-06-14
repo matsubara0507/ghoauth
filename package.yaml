@@ -61,6 +61,7 @@ executables:
     - ghoauth
     - githash
     - mix
+    - open-browser
     - rio >= 0.1.1.0
 
 tests:
