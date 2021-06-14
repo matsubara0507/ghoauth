@@ -1,0 +1,25 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "ghoauth:lib"
+
+    - path: "./app/Main.hs"
+      component: "ghoauth:exe:ghoauth"
+
+    - path: "./app/GetOpt.hs"
+      component: "ghoauth:exe:ghoauth"
+
+    - path: "./app/GhOAuth/Cmd.hs"
+      component: "ghoauth:exe:ghoauth"
+
+    - path: "./app/GhOAuth/Env.hs"
+      component: "ghoauth:exe:ghoauth"
+
+    - path: "./app/Version.hs"
+      component: "ghoauth:exe:ghoauth"
+
+    - path: "./app/Paths_ghoauth.hs"
+      component: "ghoauth:exe:ghoauth"
+
+    - path: "./test"
+      component: "ghoauth:test:ghoauth-test"
