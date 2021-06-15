@@ -4,6 +4,7 @@ module Main where
 
 import           Paths_ghoauth          (version)
 import           RIO
+import           RIO.Process            (mkDefaultProcessContext)
 
 import           Configuration.Dotenv   (defaultConfig, loadFile)
 import           Data.Extensible
@@ -29,6 +30,7 @@ main = withGetOpt' "[options] [input-file]" opts $ \r args usage -> do
         <: #client_id @= clientIdOpt
         <: #env_file  @= envFileOpt
         <: #env_var   @= envVarOpt
+        <: #clip      @= clipOpt
         <: nil
 
 type Options = Record
@@ -38,6 +40,7 @@ type Options = Record
    , "client_id" >: Maybe Text
    , "env_file"  >: FilePath
    , "env_var"   >: String
+   , "clip"      >: Bool
    ]
 
 helpOpt :: OptDescr' Bool
@@ -58,6 +61,9 @@ envFileOpt = fromMaybe "~/.env" <$> optLastArg [] ["env-file"] "PATH" ".env file
 envVarOpt :: OptDescr' String
 envVarOpt = fromMaybe "GITHUB_TOKEN" <$> optLastArg [] ["env-var"] "TEXT" "Environment variable name for access token"
 
+clipOpt :: OptDescr' Bool
+clipOpt = optFlag [] ["clip"] "Set user_code to clipboard"
+
 runCmd :: Options -> Maybe FilePath -> IO ()
 runCmd opts _path = do
   clientIdEnv <- fmap fromString <$> lookupEnv "CLIENT_ENV"
@@ -65,10 +71,13 @@ runCmd opts _path = do
     Nothing    -> fail "not found CLIENT_ID"
     (Just cid) -> do
       let plugin = hsequence
-                 $ #logger <@=> MixLogger.buildPlugin logOpts
-                <: #client <@=> pure (GitHub.newClient cid)
-                <: #dotenv <@=> pure (#path @= (opts ^. #env_file) <: #var @= (opts ^. #env_var) <: nil)
+                 $ #logger         <@=> MixLogger.buildPlugin logOpts
+                <: #client         <@=> pure (GitHub.newClient cid)
+                <: #dotenv         <@=> pure envOpt
+                <: #processContext <@=> mkDefaultProcessContext
+                <: #useClipboard   <@=> pure (opts ^. #clip)
                 <: nil
       Mix.run plugin cmd
   where
     logOpts = #handle @= stdout <: #verbose @= (opts ^. #verbose) <: nil
+    envOpt  = #path @= (opts ^. #env_file) <: #var @= (opts ^. #env_var) <: nil

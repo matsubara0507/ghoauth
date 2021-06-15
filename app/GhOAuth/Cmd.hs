@@ -8,6 +8,7 @@ import qualified RIO.List             as List
 import qualified RIO.Text             as Text
 
 import qualified Configuration.Dotenv as Dotenv
+import           GhOAuth.Clipboard    (setClipboard)
 import           GhOAuth.Env
 import qualified GitHub.Login         as GitHub
 import qualified GitHub.Login.Device  as GitHub
@@ -35,8 +36,12 @@ fetchAccessTokenInfo = do
       pure (GitHub.Err e)
     GitHub.Ok code -> do
       BS.putStr $ encodeUtf8 ("Copy code: " <> code ^. #user_code <> "\n")
-      whenM (not <$> openBrowser' code) $
-        BS.putStr $ encodeUtf8 ("then open: " <> code ^. #verification_uri <> "\n")
+      BS.putStr $ encodeUtf8 ("then open: " <> code ^. #verification_uri <> "\n")
+      whenM (asks $ view #useClipboard) $
+        unlessM (setClipboard (code ^. #user_code)) $
+          MixLogger.logWarn "Failure: set user_code to clipboard"
+      unlessM (openBrowser' code) $
+          MixLogger.logWarn "Failure: open browser"
       now <- getCurrentTime
       pollAccessTokenInfo (addUTCTime (fromIntegral $ code ^. #expires_in) now) code
 
