@@ -1,5 +1,7 @@
 # ghoauth
 
+[![Build Application](https://github.com/matsubara0507/ghoauth/actions/workflows/build.yaml/badge.svg)](https://github.com/matsubara0507/ghoauth/actions/workflows/build.yaml)
+
 CLI Tool to generate GitHub token by GitHub Apps
 
 ## Usage
