@@ -3,7 +3,6 @@ module GitHub.Login.Data where
 import qualified Data.Text        as T
 import           Network.HTTP.Req (QueryParam, (=:))
 
-
 -- |
 -- ref: https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
 data Scope

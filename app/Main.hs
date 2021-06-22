@@ -18,7 +18,7 @@ import           System.Environment     (lookupEnv)
 import qualified Version
 
 main :: IO ()
-main = withGetOpt' "[options] [input-file]" opts $ \r args usage -> do
+main = withGetOpt' "[options]" opts $ \r args usage -> do
   _ <- tryIO $ loadFile defaultConfig
   if | r ^. #help    -> hPutBuilder stdout (fromString usage)
      | r ^. #version -> hPutBuilder stdout (Version.build version <> "\n")
@@ -56,10 +56,10 @@ clientIdOpt :: OptDescr' (Maybe Text)
 clientIdOpt = fmap fromString <$> optLastArg [] ["client_id"] "TEXT" "GitHub Apps client ID instead of CLIENT_ID environment variable"
 
 envFileOpt :: OptDescr' FilePath
-envFileOpt = fromMaybe "~/.env" <$> optLastArg [] ["env-file"] "PATH" ".env file path to write access token"
+envFileOpt = fromMaybe "~/.env" <$> optLastArg [] ["env-file"] "PATH" ".env file path to write access token (default ~/.env)"
 
 envVarOpt :: OptDescr' String
-envVarOpt = fromMaybe "GITHUB_TOKEN" <$> optLastArg [] ["env-var"] "TEXT" "Environment variable name for access token"
+envVarOpt = fromMaybe "GITHUB_TOKEN" <$> optLastArg [] ["env-var"] "TEXT" "Environment variable name for access token (default GITHUB_TOKEN)"
 
 clipOpt :: OptDescr' Bool
 clipOpt = optFlag [] ["clip"] "Set user_code to clipboard"
