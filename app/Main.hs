@@ -4,6 +4,8 @@ module Main where
 
 import           Paths_ghoauth          (version)
 import           RIO
+import           RIO.Directory          (getHomeDirectory)
+import           RIO.FilePath           ((</>))
 import           RIO.Process            (mkDefaultProcessContext)
 
 import           Configuration.Dotenv   (defaultConfig, loadFile)
@@ -38,7 +40,7 @@ type Options = Record
    , "version"   >: Bool
    , "verbose"   >: Bool
    , "client_id" >: Maybe Text
-   , "env_file"  >: FilePath
+   , "env_file"  >: Maybe FilePath
    , "env_var"   >: String
    , "clip"      >: Bool
    ]
@@ -55,8 +57,8 @@ verboseOpt = optFlag ['v'] ["verbose"] "Enable verbose mode: verbosity level \"d
 clientIdOpt :: OptDescr' (Maybe Text)
 clientIdOpt = fmap fromString <$> optLastArg [] ["client_id"] "TEXT" "GitHub Apps client ID instead of CLIENT_ID environment variable"
 
-envFileOpt :: OptDescr' FilePath
-envFileOpt = fromMaybe "~/.env" <$> optLastArg [] ["env-file"] "PATH" ".env file path to write access token (default ~/.env)"
+envFileOpt :: OptDescr' (Maybe FilePath)
+envFileOpt = optLastArg [] ["env-file"] "PATH" ".env file path to write access token (default ~/.env)"
 
 envVarOpt :: OptDescr' String
 envVarOpt = fromMaybe "GITHUB_TOKEN" <$> optLastArg [] ["env-var"] "TEXT" "Environment variable name for access token (default GITHUB_TOKEN)"
@@ -67,6 +69,10 @@ clipOpt = optFlag [] ["clip"] "Set user_code to clipboard"
 runCmd :: Options -> Maybe FilePath -> IO ()
 runCmd opts _path = do
   clientIdEnv <- fmap fromString <$> lookupEnv "CLIENT_ENV"
+  homeDir <- getHomeDirectory
+  let envOpt = #path @= fromMaybe (homeDir </> ".env") (opts ^. #env_file)
+            <: #var @= (opts ^. #env_var)
+            <: nil
   case opts ^. #client_id <|> clientIdEnv of
     Nothing    -> fail "not found CLIENT_ID"
     (Just cid) -> do
@@ -80,4 +86,3 @@ runCmd opts _path = do
       Mix.run plugin cmd
   where
     logOpts = #handle @= stdout <: #verbose @= (opts ^. #verbose) <: nil
-    envOpt  = #path @= (opts ^. #env_file) <: #var @= (opts ^. #env_var) <: nil
